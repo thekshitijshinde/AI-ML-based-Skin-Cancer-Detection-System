@@ -1,0 +1,117 @@
+def show():
+    try:
+        # Get form data
+        name = request.form.get("name")
+        age = request.form.get("age")
+        gender = request.form.get("gender")
+        location = request.form.get("location")
+        description = request.form.get("description")
+
+        if not all([name, age, gender, location]):
+            flash("All fields are required!", "danger")
+            return redirect(url_for("home"))
+
+        if "pic" not in request.files or request.files["pic"].filename == "":
+            flash("Please upload an image for analysis!", "danger")
+            return redirect(url_for("home"))
+
+        pic = request.files["pic"]
+        if not pic.filename.lower().endswith((".png", ".jpg", ".jpeg")):
+            flash("Please upload a valid image file (PNG, JPG, JPEG)!", "danger")
+            return redirect(url_for("home"))
+
+        # Process the image
+        inputimg = Image.open(pic).resize((28, 28))
+        img = np.array(inputimg) / 255.0  # Normalize
+        img = img.reshape(1, 28, 28, 3)
+
+        # Predict condition
+        predicted_class = predict_skin_cancer(inputimg)
+
+        if isinstance(predicted_class, dict) and "error" in predicted_class:
+            flash("Error getting prediction!", "danger")
+            return redirect(url_for("home"))
+
+        # Now, predicted_class is already an integer
+        result_text = {
+            0: "Actinic keratosis (Cancer)",
+            1: "Basal cell carcinoma (Cancer)",
+            2: "Benign keratosis-like lesions (Non-Cancerous)",
+            3: "Dermatofibroma (Non-Cancerous)",
+            4: "Melanocytic nevi (Non-Cancerous)",
+            5: "Pyogenic granulomas (Can lead to cancer)",
+            6: "Melanoma (Cancer)"
+        }.get(predicted_class, "Unknown condition")
+
+
+        # Fetch doctors from database
+        with sqlite3.connect("users.db") as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS doctors (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT, 
+                    specialization TEXT, 
+                    hospital TEXT, 
+                    location TEXT, 
+                    contact TEXT, 
+                    rating REAL, 
+                    reviews_count INTEGER, 
+                    experience_years INTEGER, 
+                    success_rate REAL
+                )
+            """)
+            conn.commit()
+
+            doctors = cursor.execute("""
+                SELECT name, specialization, hospital, location, contact, rating, reviews_count, experience_years, success_rate 
+                FROM doctors
+                ORDER BY rating DESC, reviews_count DESC
+            """).fetchall()
+
+            return render_template("results.html", result=result_text, doctors=doctors, patient={"name": name, "age": age, "gender": gender, "location": location, "description": description})
+model : from flask import Flask, request, render_template, redirect, url_for, session, flash, jsonify
+import sqlite3
+import os
+import time
+import requests
+import json
+from PIL import Image
+import numpy as np
+import skin_cancer_detection as SCD  # Import your ML model
+from werkzeug.security import generate_password_hash, check_password_hash
+from tensorflow.keras.models import load_model
+import tensorflow as tf
+
+tf.config.set_visible_devices([], 'GPU')
+
+model = load_model("skin.h5")
+
+# Hugging Face API URL
+HF_API_URL = "https://api-inference.huggingface.co/models/imtiyaz123/skin-cancer"
+
+
+def predict_skin_cancer(image):
+    if model is None:
+        return {"error": "Model not loaded"}
+
+    try:
+        # Ensure the image is RGB
+        image = image.convert("RGB")
+        
+        # Convert to numpy array and normalize
+        img = np.array(image) / 255.0  
+        
+        # Reshape to match model input shape
+        img = img.reshape(1, 28, 28, 3)
+
+        # Perform prediction
+        prediction = model.predict(img)
+
+        # Ensure the output is properly extracted
+        predicted_class = int(np.argmax(prediction))  # Extract the highest probability class
+        return predicted_class
+
+    except Exception as e:
+        print(f"Prediction Error: {str(e)}")
+        return {"error": str(e)}

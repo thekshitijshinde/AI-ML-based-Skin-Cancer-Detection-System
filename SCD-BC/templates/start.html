@@ -1,0 +1,78 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Skin Cancer Detection - Sign Up</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#00adb5">
+
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    
+    <style>
+        body {
+            background-color: #1a1a2e;
+            color: white;
+        }
+
+        .card {
+            background-color: #16213e;
+            border: none;
+            color: white;
+        }
+
+        .btn-custom {
+            background-color: #00adb5;
+            border: none;
+        }
+
+        .btn-custom:hover {
+            background-color: #008c9e;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="d-flex align-items-center justify-content-center" style="height: 100vh;">
+        <div class="container">
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-6 text-center text-lg-start">
+                    <h1 class="display-4 fw-bold">
+                        <!-- <span style="color: #00adb5;">Sign Up</span><br> -->
+                        Skin Cancer Detection
+                    </h1>
+                    <p class="lead">Get expert skin health insights.</p>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card p-4 shadow-lg">
+                        <div class="card-body text-center">
+                            <h3 class="mb-4">Choose Login Type</h3>
+                            <div class="d-grid gap-3">
+                                <a href="{{ url_for('doctor_login') }}" class="btn btn-custom btn-lg">
+                                    <i class="fas fa-user-md me-2"></i>Login as Doctor
+                                </a>
+                                <a href="{{ url_for('login') }}" class="btn btn-custom btn-lg">
+                                    <i class="fas fa-user me-2"></i>Login as Patient
+                                </a>
+                                <a href="intent://scan/#Intent;scheme=market;package=com.example.app;end;">Install App</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('Service Worker registered:', reg))
+        .catch(err => console.error('Service Worker registration failed:', err));
+}
+    </script>
+    
+</body>
+</html>

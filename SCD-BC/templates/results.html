@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Results - Skin Cancer Detection</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #1a1a2e;
+      color: white;
+      /* margin-top: 50px; */
+      margin-bottom: 50px;
+    }
+    .navbar {
+      background-color: #16213e !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-brand {
+      color: #00adb5 !important;
+      font-weight: bold;
+    }
+    .badge.bg-success {
+      font-size: 0.8rem;
+      padding: 0.5em 1em;
+      background-color: #00adb5 !important;
+    }
+    .alert {
+      border: none;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    .alert-success {
+      background-color: rgba(0, 173, 181, 0.1);
+      color: #00adb5;
+      border-left: 4px solid #00adb5;
+    }
+    .alert-warning {
+      background-color: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+      border-left: 4px solid #ffc107;
+    }
+    .alert-danger {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+      border-left: 4px solid #dc3545;
+    }
+    .doctor-card {
+      background-color: #16213e;
+      border: 1px solid rgba(0, 173, 181, 0.1);
+      border-radius: 15px;
+      margin-bottom: 20px;
+      padding: 25px;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .doctor-card:hover {
+      border-color: #00adb5;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 173, 181, 0.2);
+    }
+    .doctor-info {
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .doctor-header {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .doctor-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .doctor-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      min-width: 200px;
+      background: rgba(0, 173, 181, 0.05);
+      padding: 15px;
+      border-radius: 12px;
+    }
+    .doctor-stat-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .doctor-stat-item i {
+      color: #00adb5;
+      width: 20px;
+      text-align: center;
+    }
+    .rating-stars {
+      color: #ffd700;
+      font-size: 1.1em;
+      margin-right: 8px;
+    }
+    .doctor-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      grid-column: 1 / -1;
+    }
+    .patient-info {
+      background-color: #16213e;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transform: translateY(0);
+      transition: all 0.3s ease;
+    }
+    .patient-info:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+    }
+    .diagnosis-section {
+      background-color: #16213e;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transform: translateY(0);
+      transition: all 0.3s ease;
+    }
+    .diagnosis-section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+    }
+    .section-title {
+      color: #00adb5;
+      margin-bottom: 20px;
+    }
+    .recommendation-prompt {
+      background-color: #16213e;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transform: translateY(0);
+      transition: all 0.3s ease;
+    }
+    .recommendation-prompt:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+    }
+    .btn-custom {
+      background-color: #00adb5;
+      color: white;
+      border: none;
+      padding: 10px 30px;
+      margin: 0 10px;
+      transition: all 0.3s ease;
+    }
+    .btn-custom:hover {
+      background-color: #008c9e;
+      color: white;
+      transform: translateY(-2px);
+    }
+    .form-select {
+      border-color: #2a2a4a;
+      cursor: pointer;
+    }
+    .form-select:focus {
+      border-color: #00adb5;
+      box-shadow: 0 0 0 0.25rem rgba(0, 173, 181, 0.25);
+    }
+    .form-select option {
+      background-color: #1a1a2e;
+      color: white;
+    }
+    .container:nth-child(2){
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('home') }}">Skin Cancer Detection</a>
+      <div class="d-flex">
+        {% if logged_in %}
+          <a class="btn btn-danger mx-2" href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+          <a class="btn btn-primary mx-2" href="{{ url_for('login') }}">Login</a>
+          <a class="btn btn-secondary mx-2" href="{{ url_for('signup') }}">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Patient Information Section -->
+    <div class="patient-info">
+      <h3 class="section-title">Patient Information</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Name:</strong> {{ patient.name }}</p>
+          <p><strong>Age:</strong> {{ patient.age }}</p>
+          <p><strong>Gender:</strong> {{ patient.gender }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Location:</strong> {{ patient.location }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagnosis Section -->
+    <div class="diagnosis-section">
+      <h3 class="section-title">Diagnosis Results</h3>
+      {% if patient.is_healthy %}
+        <div class="alert alert-success" role="alert">
+          <h4 class="alert-heading">✅ Healthy Skin Detected</h4>
+          <p>Good news! The analysis shows your skin appears to be healthy. Here's what we found:</p>
+          <hr>
+          <p><strong>Diagnosis:</strong> {{ result }}</p>
+          <p>{{ info }}</p>
+          <p class="mb-0">While this is a positive result, it's always good to maintain regular skin check-ups and protect your skin from sun damage.</p>
+        </div>
+      {% else %}
+        <h4>Diagnosed with: <span style="color:yellow">{{ result }}</span></h4>
+        <p class="mt-3">{{ info }}</p>
+        {% if is_serious %}
+          <div class="alert alert-danger mt-3" role="alert">
+            <h4 class="alert-heading">⚠️ Urgent Medical Attention Required!</h4>
+            <p>Your condition requires immediate medical attention. Please consult with a dermatologist or oncologist as soon as possible.</p>
+          </div>
+        {% else %}
+          <div class="alert alert-warning mt-3" role="alert">
+            <p class="mb-0">Please consult a dermatologist for proper evaluation and treatment.</p>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <!-- Doctor Recommendation Prompt -->
+    <div class="recommendation-prompt">
+      {% if patient.is_healthy %}
+        <h4>Would you like to see preventive care specialists?</h4>
+        <p class="text-muted">Regular check-ups can help maintain your skin health.</p>
+      {% else %}
+        <h4>Would you like to see doctor recommendations?</h4>
+        <p class="text-muted">We can suggest qualified specialists for your condition.</p>
+      {% endif %}
+      <div class="mt-4">
+        <button class="btn btn-custom" onclick="showDoctors()">Yes, show recommendations</button>
+        <a href="{{ url_for('home') }}" class="btn btn-outline-light">No, back to home</a>
+      </div>
+    </div>
+
+    <!-- Doctor Recommendations (Hidden by default) -->
+    <div id="doctorRecommendations" style="display: none;">
+      <div class="doctor-recommendations">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="section-title mb-0">Recommended Specialists</h3>
+          <div class="filter-options d-flex gap-2">
+            <select class="form-select bg-dark text-light border-secondary" onchange="filterDoctors(this.value)" style="width: auto;">
+              <option value="all">All Ratings</option>
+              <option value="4.5">4.5+ Stars</option>
+              <option value="4">4+ Stars</option>
+              <option value="3.5">3.5+ Stars</option>
+            </select>
+            <select class="form-select bg-dark text-light" onchange="sortDoctors(this.value)" style="width: auto;">
+              <option value="rating">Sort by Rating</option>
+              <option value="experience">Sort by Experience</option>
+              <option value="success">Sort by Success Rate</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Show recommended specialists -->
+        <div class="mb-4">
+          <h4 class="text-success mb-3">
+            <i class="fas fa-star"></i> Top Recommended Specialists
+          </h4>
+          {% if recommended_doctors %}
+            {% for doctor in recommended_doctors %}
+              <div class="doctor-card" data-rating="{{ doctor[6]|default(4.5) }}" data-experience="{{ doctor[8]|default(10) }}" data-success="{{ doctor[9]|default(95) }}">
+                <div class="doctor-info">
+                  <div class="doctor-header">
+                    <div class="doctor-title">
+                      <div>
+                        <h5 style="color: #00adb5;">{{ doctor[1] }}</h5>
+                        <p class="mb-0"><strong>{{ doctor[2] }}</strong> at {{ doctor[3] }}</p>
+                      </div>
+                      {% if doctor[4].lower() == patient.location.lower() %}
+                        <span class="badge bg-success">
+                          <i class="fas fa-map-marker-alt me-1"></i>Nearest
+                        </span>
+                      {% endif %}
+                    </div>
+                    <div class="rating-stars">
+                      {% set rating = doctor[6]|default(4.5) %}
+                      {% for i in range(5) %}
+                        {% if i < rating|int %}
+                          <i class="fas fa-star"></i>
+                        {% elif (rating - i)|round(1) >= 0.5 %}
+                          <i class="fas fa-star-half-alt"></i>
+                        {% else %}
+                          <i class="far fa-star"></i>
+                        {% endif %}
+                      {% endfor %}
+                      <span class="ms-2">{{ rating|default(4.5)|round(1) }}</span>
+                      <span class="text-muted">({{ doctor[7]|default(200) }}+ reviews)</span>
+                    </div>
+                    <button class="btn btn-info mt-2" onclick="showDoctorDetails('{{ doctor[1] }}', '{{ doctor[3] }}', '{{ doctor[12] }}', '{{ doctor[11] }}', '{{ doctor[10] }}', '{{ doctor[13] }}', '{{ doctor[0] }}')">
+                      <i class="fas fa-calendar-alt me-2"></i>View Details & Book
+                    </button>
+                  </div>
+                </div>
+
+                <div class="doctor-stats">
+                  <div class="doctor-stat-item">
+                    <i class="fas fa-user-md"></i>
+                    <div>
+                      <strong>Experience</strong><br>
+                      {{ doctor[8]|default(10) }}+ years
+                    </div>
+                  </div>
+                  <div class="doctor-stat-item">
+                    <i class="fas fa-chart-line"></i>
+                    <div>
+                      <strong>Success Rate</strong><br>
+                      {{ doctor[9]|default(95) }}%
+                    </div>
+                  </div>
+                  <div class="doctor-stat-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                      <strong>Contact</strong><br>
+                      {{ doctor[5] }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+
+        <!-- Show other city doctors -->
+        {% if other_doctors %}
+          <div class="mt-4">
+            <h4 class="text-info mb-3">Other Available Specialists</h4>
+            {% for doctor in other_doctors %}
+              <div class="doctor-card" data-rating="{{ doctor[6]|default(4.5) }}" data-experience="{{ doctor[8]|default(10) }}" data-success="{{ doctor[9]|default(95) }}">
+                <div class="doctor-info">
+                  <div class="doctor-header">
+                    <div class="doctor-title">
+                      <div>
+                        <h5 style="color: #00adb5;">{{ doctor[1] }}</h5>
+                        <p class="mb-0"><strong>{{ doctor[2] }}</strong> at {{ doctor[3] }}</p>
+                      </div>
+                    </div>
+                    <div class="rating-stars">
+                      {% set rating = doctor[6]|default(4.5) %}
+                      {% for i in range(5) %}
+                        {% if i < rating|int %}
+                          <i class="fas fa-star"></i>
+                        {% elif (rating - i)|round(1) >= 0.5 %}
+                          <i class="fas fa-star-half-alt"></i>
+                        {% else %}
+                          <i class="far fa-star"></i>
+                        {% endif %}
+                      {% endfor %}
+                      <span class="ms-2">{{ rating|default(4.5)|round(1) }}</span>
+                      <span class="text-muted">({{ doctor[7]|default(150) }}+ reviews)</span>
+                    </div>
+                    <button class="btn btn-info mt-2" onclick="showDoctorDetails('{{ doctor[1] }}', '{{ doctor[3] }}', '{{ doctor[12] }}', '{{ doctor[11] }}', '{{ doctor[10] }}', '{{ doctor[13] }}', '{{ doctor[0] }}')">
+                      <i class="fas fa-calendar-alt me-2"></i>View Details & Book
+                    </button>
+                  </div>
+                </div>
+
+                <div class="doctor-stats">
+                  <div class="doctor-stat-item">
+                    <i class="fas fa-user-md"></i>
+                    <div>
+                      <strong>Experience</strong><br>
+                      {{ doctor[8]|default(10) }}+ years
+                    </div>
+                  </div>
+                  <div class="doctor-stat-item">
+                    <i class="fas fa-chart-line"></i>
+                    <div>
+                      <strong>Success Rate</strong><br>
+                      {{ doctor[9]|default(95) }}%
+                    </div>
+                  </div>
+                  <div class="doctor-stat-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                      <strong>Location</strong><br>
+                      {{ doctor[4] }}
+                    </div>
+                  </div>
+                  <div class="doctor-stat-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                      <strong>Contact</strong><br>
+                      {{ doctor[5] }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if not doctors %}
+          <div class="alert alert-info">
+            <p class="mb-0">No specialists found in your area. Please consult with your general physician for a referral.</p>
+          </div>
+        {% endif %}
+
+        <div class="text-center mt-4">
+          <a href="{{ url_for('home') }}" class="btn btn-primary">Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Doctor Details Modal -->
+  <div class="modal fade" id="doctorDetailsModal" tabindex="-1" aria-labelledby="doctorDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title" id="doctorDetailsModalLabel">Doctor Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="doctorInfo">
+            <!-- Doctor info will be populated here -->
+          </div>
+          <div id="appointmentSection" style="display: none;">
+            <h5 class="mt-4 mb-3">Book Appointment</h5>
+            <form id="appointmentForm">
+              <div class="mb-3">
+                <label class="form-label">Available Days</label>
+                <div id="availableDays" class="mb-3">
+                  <!-- Available days will be populated here -->
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="appointmentDate" class="form-label">Select Date</label>
+                <input type="date" class="form-control bg-dark text-light" id="appointmentDate" required>
+              </div>
+              <div class="mb-3">
+                <label for="appointmentTime" class="form-label">Select Time</label>
+                <select class="form-select bg-dark text-light" id="appointmentTime" required>
+                  <option value="">Choose time...</option>
+                  <option value="09:00">09:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="11:00">11:00 AM</option>
+                  <option value="14:00">02:00 PM</option>
+                  <option value="15:00">03:00 PM</option>
+                  <option value="16:00">04:00 PM</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Consultation Fee</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-dark text-light">₹</span>
+                  <input type="text" class="form-control bg-dark text-light" id="consultationFee" readonly>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+            </form>
+          </div>
+          <div id="paymentSection" style="display: none;">
+            <h5 class="mt-4 mb-3">Payment Details</h5>
+            <form id="paymentForm">
+              <div class="mb-3">
+                <label for="cardNumber" class="form-label">Card Number</label>
+                <input type="text" class="form-control bg-dark text-light" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="expiryDate" class="form-label">Expiry Date</label>
+                  <input type="text" class="form-control bg-dark text-light" id="expiryDate" placeholder="MM/YY" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="cvv" class="form-label">CVV</label>
+                  <input type="password" class="form-control bg-dark text-light" id="cvv" placeholder="123" required>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">Pay Now</button>
+            </form>
+          </div>
+          <div id="confirmationSection" style="display: none;">
+            <div class="alert alert-success mt-4">
+              <h5>Appointment Confirmed!</h5>
+              <p>Your appointment has been successfully booked. Please check your email for details.</p>
+              <div id="appointmentDetails"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let currentDoctorData = null;
+
+    function showDoctors() {
+      document.querySelector('.recommendation-prompt').style.display = 'none';
+      document.getElementById('doctorRecommendations').style.display = 'block';
+    }
+
+    function showDoctorDetails(name, hospital, doctorDesc, hospitalDesc, fee, availableDays, doctorId) {
+      currentDoctorData = {
+        name: name,
+        hospital: hospital,
+        doctorDesc: doctorDesc,
+        hospitalDesc: hospitalDesc,
+        fee: fee,
+        availableDays: availableDays,
+        doctorId: doctorId
+      };
+
+      const doctorInfo = document.getElementById('doctorInfo');
+      doctorInfo.innerHTML = `
+        <h4>${name}</h4>
+        <h5 class="text-info mb-3">${hospital}</h5>
+        <div class="card bg-dark mb-3">
+          <div class="card-body">
+            <h6 class="card-title text-info">About the Doctor</h6>
+            <p class="card-text">${doctorDesc}</p>
+          </div>
+        </div>
+        <div class="card bg-dark">
+          <div class="card-body">
+            <h6 class="card-title text-info">About the Hospital</h6>
+            <p class="card-text">${hospitalDesc}</p>
+          </div>
+        </div>
+        <button class="btn btn-primary mt-3" onclick="showAppointmentSection()">Book Appointment</button>
+      `;
+
+      // Reset sections
+      document.getElementById('appointmentSection').style.display = 'none';
+      document.getElementById('paymentSection').style.display = 'none';
+      document.getElementById('confirmationSection').style.display = 'none';
+
+      // Show modal
+      const modal = new bootstrap.Modal(document.getElementById('doctorDetailsModal'));
+      modal.show();
+    }
+
+    function showAppointmentSection() {
+      document.getElementById('appointmentSection').style.display = 'block';
+      document.getElementById('consultationFee').value = currentDoctorData.fee;
+
+      // Display available days
+      const availableDays = currentDoctorData.availableDays.split(',');
+      const availableDaysDiv = document.getElementById('availableDays');
+      availableDaysDiv.innerHTML = availableDays.map(day => 
+        `<span class="badge bg-info me-2">${day}</span>`
+      ).join('');
+
+      // Set min date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('appointmentDate').min = today;
+    }
+
+    document.getElementById('appointmentForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const appointmentDate = document.getElementById('appointmentDate').value;
+      const appointmentTime = document.getElementById('appointmentTime').value;
+
+      try {
+        const response = await fetch('/book-appointment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            doctor_id: currentDoctorData.doctorId,
+            appointment_date: appointmentDate,
+            appointment_time: appointmentTime,
+            payment_amount: currentDoctorData.fee
+          })
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          currentDoctorData.appointmentId = data.appointment_id;
+          document.getElementById('appointmentSection').style.display = 'none';
+          document.getElementById('paymentSection').style.display = 'block';
+        } else {
+          alert(data.error || 'Failed to book appointment. Please try again.');
+        }
+      } catch (error) {
+        alert('Error booking appointment: ' + error.message);
+      }
+    });
+
+    document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const cardNumber = document.getElementById('cardNumber').value;
+      const expiryDate = document.getElementById('expiryDate').value;
+      const cvv = document.getElementById('cvv').value;
+
+      try {
+        const response = await fetch('/process-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            appointment_id: currentDoctorData.appointmentId,
+            card_number: cardNumber,
+            expiry_date: expiryDate,
+            cvv: cvv
+          })
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          document.getElementById('paymentSection').style.display = 'none';
+          document.getElementById('confirmationSection').style.display = 'block';
+          
+          const details = data.appointment_details;
+          document.getElementById('appointmentDetails').innerHTML = `
+            <p><strong>Doctor:</strong> ${details.doctor_name}</p>
+            <p><strong>Hospital:</strong> ${details.hospital}</p>
+            <p><strong>Date:</strong> ${details.date}</p>
+            <p><strong>Time:</strong> ${details.time}</p>
+            <p><strong>Fee Paid:</strong> ₹${details.amount}</p>
+            <p><strong>Contact:</strong> ${details.contact}</p>
+          `;
+        } else {
+          alert(data.error || 'Payment failed. Please try again.');
+        }
+      } catch (error) {
+        alert('Error processing payment: ' + error.message);
+      }
+    });
+
+    function filterDoctors(minRating) {
+      const cards = document.querySelectorAll('.doctor-card');
+      cards.forEach(card => {
+        const rating = parseFloat(card.getAttribute('data-rating'));
+        if (minRating === 'all' || rating >= parseFloat(minRating)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function sortDoctors(criteria) {
+      const doctorLists = document.querySelectorAll('.doctor-recommendations > div');
+      
+      doctorLists.forEach(list => {
+        const cards = Array.from(list.querySelectorAll('.doctor-card'));
+        cards.sort((a, b) => {
+          const aValue = parseFloat(a.getAttribute(`data-${criteria}`));
+          const bValue = parseFloat(b.getAttribute(`data-${criteria}`));
+          return bValue - aValue;
+        });
+        
+        cards.forEach(card => {
+          list.appendChild(card);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

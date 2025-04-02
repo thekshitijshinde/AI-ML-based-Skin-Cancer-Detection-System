@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skin Cancer Detection</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #1a1a2e;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    *{
+      color: white;
+    }
+    .container {
+      max-width: 900px;
+      flex: 1;
+    }
+    .form-control, .form-select {
+      background-color: #16213e;
+      border-color: #2a2a4a;
+      color: white;
+      transition: all 0.3s ease;
+    }
+    .form-control:focus, .form-select:focus {
+      background-color: #16213e;
+      border-color: #00adb5;
+      color: white;
+      box-shadow: 0 0 0 0.25rem rgba(0, 173, 181, 0.25);
+    }
+    .form-control::placeholder {
+      color: #888;
+    }
+    .form-label {
+      color: #ddd;
+      font-weight: 500;
+    }
+    .card {
+      background-color: #16213e;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+    .btn-custom {
+      background-color: #00adb5;
+      color: white;
+      border: none;
+      padding: 10px 30px;
+      transition: all 0.3s ease;
+    }
+    .btn-custom:hover {
+      background-color: #008c9e;
+      transform: translateY(-2px);
+    }
+    .navbar {
+      background-color: #16213e !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-brand {
+      color: #00adb5 !important;
+      font-weight: bold;
+    }
+    #otherCityInput {
+      transition: all 0.3s ease;
+    }
+    .page-title {
+      color: #00adb5;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: #ffffff;
+      margin-bottom: 2rem;
+    }
+    .circle-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #16213e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      border: 2px solid #00adb5;
+    }
+    .stats-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #00adb5;
+    }
+    .stats-text {
+      color: #ffffff;
+      font-size: 1.1rem;
+    }
+    footer {
+      background-color: #16213e;
+      padding: 3rem 0;
+      margin-top: 4rem;
+    }
+    .footer-links {
+      list-style: none;
+      padding: 0;
+    }
+    .footer-links li {
+      margin-bottom: 1rem;
+    }
+    .footer-links a {
+      color: #ffffff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .footer-links a:hover {
+      color: #00adb5;
+    }
+    .card-title {
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Skin Cancer Detection</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#features">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#how-it-works">How It Works</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">Contact</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                {% if logged_in %}
+                    <a class="btn btn-danger mx-2" href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                    <a class="btn btn-primary mx-2" href="{{ url_for('login') }}">Login</a>
+                    <a class="btn btn-secondary mx-2" href="{{ url_for('signup') }}">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="container-fluid py-5" style="background-color: #1a1a2e;">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <h1 class="display-4 fw-bold page-title">Skin Cancer Detection</h1>
+          <h3 class="subtitle">Early Detection,<br>Better Protection</h3>
+          <p class="lead text-light mb-4">Advanced AI-powered skin cancer detection system for early diagnosis and prevention.</p>
+          <a href="#diagnosis" class="btn btn-custom btn-lg">Get Started</a>
+        </div>
+        <div class="col-lg-6">
+          <img src="{{ url_for('static', filename='home_img.png') }}" alt="Skin Cancer Detection" class="img-fluid rounded shadow">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <div id="about" class="container py-5">
+    <h2 class="text-center page-title mb-4">About Our Service</h2>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title text-info">Our Mission</h3>
+            <p class="card-text">We are committed to providing accessible and accurate skin cancer detection services using cutting-edge AI technology. Early detection can significantly improve treatment outcomes.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title text-info">Why Choose Us</h3>
+            <ul class="list-unstyled">
+              <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Advanced AI Technology</li>
+              <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Quick & Accurate Results</li>
+              <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Expert Doctor Network</li>
+              <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Secure & Private</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div id="features" class="container py-5">
+    <h2 class="text-center page-title mb-4">Key Features</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-robot fa-3x text-info mb-3"></i>
+            <h4 class="card-title">AI Analysis</h4>
+            <p class="card-text">Advanced machine learning algorithms for accurate skin condition analysis.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-user-md fa-3x text-info mb-3"></i>
+            <h4 class="card-title">Expert Doctors</h4>
+            <p class="card-text">Connect with specialized dermatologists and oncologists.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-clock fa-3x text-info mb-3"></i>
+            <h4 class="card-title">Quick Results</h4>
+            <p class="card-text">Get instant analysis and connect with doctors immediately.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How It Works Section -->
+  <div id="how-it-works" class="container py-5">
+    <h2 class="text-center page-title mb-4">How It Works</h2>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="text-center">
+          <div class="circle-icon mb-3">
+            <i class="fas fa-camera fa-2x text-info"></i>
+          </div>
+          <h5>1. Upload Image</h5>
+          <p>Take a clear photo of the skin area you want to analyze</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="text-center">
+          <div class="circle-icon mb-3">
+            <i class="fas fa-microscope fa-2x text-info"></i>
+          </div>
+          <h5>2. AI Analysis</h5>
+          <p>Our AI system analyzes the image for potential skin conditions</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="text-center">
+          <div class="circle-icon mb-3">
+            <i class="fas fa-file-medical fa-2x text-info"></i>
+          </div>
+          <h5>3. Get Results</h5>
+          <p>Receive detailed analysis and risk assessment</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="text-center">
+          <div class="circle-icon mb-3">
+            <i class="fas fa-stethoscope fa-2x text-info"></i>
+          </div>
+          <h5>4. Expert Consultation</h5>
+          <p>Connect with specialized doctors for follow-up</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="diagnosis" class="container">
+    <div class="card mt-4 p-4">
+      <form method="POST" enctype="multipart/form-data" action="{{ url_for('show') }}" class="mt-2">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="name" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="age" class="form-label">Age</label>
+            <input type="number" class="form-control" id="age" name="age" min="1" max="120" required>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="gender" class="form-label">Gender</label>
+            <select class="form-select" id="gender" name="gender" required>
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="citySelect" class="form-label">City</label>
+            <select class="form-select" id="citySelect" name="location" onchange="toggleCityInput()">
+              <option value="">Select City</option>
+              <!-- Major Metropolitan Cities -->
+              <option value="Delhi">Delhi</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Bangalore">Bangalore</option>
+              <option value="Chennai">Chennai</option>
+              <option value="Kolkata">Kolkata</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <!-- Other Major Cities -->
+              <option value="Pune">Pune</option>
+              <option value="Ahmedabad">Ahmedabad</option>
+              <option value="Jaipur">Jaipur</option>
+              <option value="Lucknow">Lucknow</option>
+              <option value="Chandigarh">Chandigarh</option>
+              <option value="Bhopal">Bhopal</option>
+              <!-- Additional Cities -->
+              <option value="Indore">Indore</option>
+              <option value="Nagpur">Nagpur</option>
+              <option value="Coimbatore">Coimbatore</option>
+              <option value="Kochi">Kochi</option>
+              <option value="Guwahati">Guwahati</option>
+              <option value="Bhubaneswar">Bhubaneswar</option>
+              <option value="Dehradun">Dehradun</option>
+              <option value="Raipur">Raipur</option>
+              <option value="other">Other City</option>
+            </select>
+          </div>
+          
+          <div class="col-md-6" id="otherCityInput" style="display: none;">
+            <label for="location" class="form-label">Enter Your City</label>
+            <input type="text" class="form-control" id="location" name="location" placeholder="Enter your city name">
+          </div>
+        </div>
+
+        <!-- <div class="mb-3">
+          <label for="description" class="form-label">Describe Your Skin Condition</label>
+          <textarea class="form-control" id="description" name="description" rows="3" 
+            placeholder="Please describe when you first noticed the condition, any changes you've observed, and any symptoms you're experiencing."
+            required></textarea>
+        </div> -->
+
+        <div class="mb-4">
+          <label for="image" class="form-label">
+            <i class="fas fa-camera me-2"></i>Upload Skin Image
+          </label>
+          <input class="form-control" type="file" id="image" name="pic" accept="image/*" required>
+          <div class="form-text text-light">
+            <i class="fas fa-info-circle me-2"></i>Please upload a clear, well-lit image of the affected area.
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button class="btn btn-custom btn-lg px-5" type="submit">
+            <i class="fas fa-microscope me-2"></i>Upload & Diagnose
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Statistics Section -->
+  <div class="container py-5">
+    <div class="row text-center g-4">
+      <div class="col-md-3">
+        <div class="stats-number">96%</div>
+        <div class="stats-text">Accuracy Rate</div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-number">10K+</div>
+        <div class="stats-text">Successful Diagnoses</div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-number">50+</div>
+        <div class="stats-text">Expert Doctors</div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-number">25+</div>
+        <div class="stats-text">Cities Covered</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <div id="contact" class="container py-5">
+    <h2 class="text-center page-title mb-4">Contact Us</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h4 class="card-title text-info mb-4">Get in Touch</h4>
+            <div class="mb-3">
+              <i class="fas fa-envelope me-2 text-info"></i>
+              <span>support@skincancerdetection.com</span>
+            </div>
+            <div class="mb-3">
+              <i class="fas fa-phone me-2 text-info"></i>
+              <span>+91 1800-123-4567 (Toll Free)</span>
+            </div>
+            <div class="mb-3">
+              <i class="fas fa-clock me-2 text-info"></i>
+              <span>24/7 Support Available</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h4 class="card-title text-info mb-4">Emergency Support</h4>
+            <p>For urgent medical concerns, please contact your nearest hospital or emergency services.</p>
+            <div class="alert alert-info">
+              <i class="fas fa-exclamation-circle me-2"></i>
+              Emergency Helpline: 102
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <h5 class="text-info mb-3">About Us</h5>
+          <p class="text-light">We are dedicated to providing early detection and prevention of skin cancer through advanced AI technology and expert medical consultation.</p>
+        </div>
+        <div class="col-md-4 mb-4">
+          <h5 class="text-info mb-3">Quick Links</h5>
+          <ul class="footer-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4 mb-4">
+          <h5 class="text-info mb-3">Connect With Us</h5>
+          <div class="d-flex gap-3">
+            <a href="#" class="text-light"><i class="fab fa-facebook fa-2x"></i></a>
+            <a href="#" class="text-light"><i class="fab fa-twitter fa-2x"></i></a>
+            <a href="#" class="text-light"><i class="fab fa-linkedin fa-2x"></i></a>
+            <a href="#" class="text-light"><i class="fab fa-instagram fa-2x"></i></a>
+          </div>
+        </div>
+      </div>
+      <hr class="border-secondary">
+      <div class="text-center text-light mt-4">
+        <p>&copy; 2025 Skin Cancer Detection. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function toggleCityInput() {
+      const citySelect = document.getElementById('citySelect');
+      const otherCityInput = document.getElementById('otherCityInput');
+      const locationInput = document.getElementById('location');
+      
+      if (citySelect.value === 'other') {
+        otherCityInput.style.display = 'block';
+        locationInput.required = true;
+      } else {
+        otherCityInput.style.display = 'none';
+        locationInput.required = false;
+        locationInput.value = citySelect.value;
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      toggleCityInput();
+    });
+
+    if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('Service Worker registered:', reg))
+        .catch(err => console.error('Service Worker registration failed:', err)); 
+    }
+
+  </script>
+</body>
+</html>

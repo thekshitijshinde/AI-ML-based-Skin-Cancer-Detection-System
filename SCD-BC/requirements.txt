@@ -1,0 +1,9 @@
+numpy
+keras
+tensorflow-cpu
+pandas
+matplotlib
+pillow
+flask
+seaborn
+gunicorn
